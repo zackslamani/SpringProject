@@ -16,8 +16,16 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Entity
 @Table(name="adresse")
+@JsonIdentityInfo(
+	   generator = ObjectIdGenerators.PropertyGenerator.class, 
+	   property = "id")
 public class Address {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,9 +49,11 @@ public class Address {
 	
 	
     @ManyToOne()
+    @JsonBackReference
     @JoinTable(	name = "user_addresses", 
 	joinColumns = @JoinColumn(name = "address_id"), 
 	inverseJoinColumns = @JoinColumn(name = "user_id"))
+    //@JsonIgnore
     private User user;
     
 	private Date creationDate;
@@ -104,7 +114,7 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
+	
 	public User getUser() {
 	    return user;
 	 }

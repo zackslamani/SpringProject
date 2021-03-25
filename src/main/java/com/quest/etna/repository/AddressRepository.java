@@ -22,4 +22,12 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 	//@Query("SELECT * FROM adresse WHERE id = %id%")
 	public Optional<Address> findById(Long id);
 	
+	@Query(value = "select * from adresse a " +
+	        "left join user_addresses ua " +
+	        "   on a.id = ua.address_id " +
+	        "left join users u " +
+	        "   on ua.user_id = u.id " +
+	        "where u.id = :id", nativeQuery = true)
+	public List<Address> findByUserId(Long id);
+
 }

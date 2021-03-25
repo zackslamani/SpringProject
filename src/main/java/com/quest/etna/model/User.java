@@ -18,6 +18,11 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 
 @Entity
@@ -25,7 +30,9 @@ import javax.validation.constraints.Size;
 		uniqueConstraints = { 
 			@UniqueConstraint(columnNames = "username"),
 		})
-
+@JsonIdentityInfo(
+	       generator = ObjectIdGenerators.PropertyGenerator.class, 
+	       property = "id")
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +42,7 @@ public class User {
 	@Size(max = 20)
 	private String username;
 
-
+	@JsonIgnore
 	@NotBlank
 	@Size(max = 120)
 	private String password;
@@ -47,10 +54,12 @@ public class User {
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 	
+	
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinTable(	name = "user_addresses", 
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "address_id"))// inverse side: it has a mappedBy attribute, and can't decide how the association is mapped, since the other side already decided it.
+	@JsonManagedReference
 	private Set<Address> addresses = new HashSet<>();
 	
 	public User() {

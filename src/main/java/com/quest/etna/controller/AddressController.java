@@ -28,7 +28,7 @@ public class AddressController {
 	@Autowired
 	private AddressRepository addressRepository;
 	
-	@GetMapping(value="/address")
+	@GetMapping(value="/addresses")
 	public List <Address> getListAddress(){
 		 
 		List<Address> addresses = new ArrayList<Address>();
@@ -54,6 +54,14 @@ public class AddressController {
 		addressRepository.save(address);
 		return address;
 	}
+	
+	@GetMapping(value="/address/user/{id}")
+	public List<Address> getAddressByUserId(@PathVariable("id") Long id){
+	List<Address> address = addressRepository.findByUserId(id);
+	
+		return address;
+	}
+
 	
 	@PutMapping("/address/{id}")
 	  public ResponseEntity<Address> updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
@@ -81,7 +89,6 @@ public class AddressController {
 	      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
-	
 	
 	
 

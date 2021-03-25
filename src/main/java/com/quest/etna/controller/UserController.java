@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.quest.etna.model.Address;
 import com.quest.etna.model.User;
 import com.quest.etna.repository.UserRepository;
 
@@ -29,7 +31,7 @@ public class UserController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@GetMapping(value="/user")
+	@GetMapping(value="/users")
 	public List <User> getListUser(){
 		 
 		List<User> users = new ArrayList<User>();
@@ -62,8 +64,8 @@ public class UserController {
 
 	    if (userData.isPresent()) {
 	      User _user = userData.get();
-	      _user.setPassword(user.getPassword());
 	      _user.setUsername(user.getUsername());
+	      _user.setPassword(user.getPassword());
 	      _user.setRoles(user.getRoles());
 	      return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
 	    } else {
@@ -81,7 +83,6 @@ public class UserController {
 	      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	  }
-	
 	
 	
 }
