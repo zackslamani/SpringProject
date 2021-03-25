@@ -103,7 +103,11 @@ public class User {
 		this.roles = roles;
 	}
 	
-	public Set<Address> getAdresses() {
+	public void setAddresses(Set<Address> addresses) {
+		this.addresses = addresses;
+	}
+	
+	public Set<Address> getAddresses() {
 		return addresses;
 	}
 	

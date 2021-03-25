@@ -23,7 +23,7 @@ import com.quest.etna.repository.AddressRepository;
 import com.quest.etna.service.AddressService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/addresses")
+@RequestMapping("/address")
 public class AddressController {
 
 	@Autowired
@@ -69,7 +69,7 @@ public class AddressController {
 	}
 
 	
-	@PutMapping("/user/{id}")
+	@PutMapping("/{id}")
 	  public Address updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
 	    Optional<Address> addressData = addressRepository.findById(id);
 	    	return addressService.update(id, address);
@@ -83,8 +83,6 @@ public class AddressController {
 	      if(success) {
 	    	  return new ResponseEntity<>(HttpStatus.OK);
 	      }
-	      
-	    
 	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	    
 	  }

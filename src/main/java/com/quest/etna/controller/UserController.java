@@ -21,67 +21,66 @@ import org.springframework.web.bind.annotation.RestController;
 import com.quest.etna.model.Address;
 import com.quest.etna.model.User;
 import com.quest.etna.repository.UserRepository;
+import com.quest.etna.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/us")
+@RequestMapping("/user")
 public class UserController {
 
 
 	@Autowired
 	private UserRepository userRepository;
 	
-	@GetMapping(value="/users")
+	@Autowired
+	private UserService userService;
+	
+	@GetMapping(value="")
+	@ResponseStatus(HttpStatus.OK)
 	public List <User> getListUser(){
 		 
-		List<User> users = new ArrayList<User>();
-		      
-		userRepository.findAll().forEach(users::add);
+		List<User> users = userService.getList();
 
 		 return users;
 	}
 	
-	@GetMapping(value="/user/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
-	Optional <User> user = userRepository.findById(id);
 	
-		if(user.isEmpty()) {
+	
+	
+	@GetMapping(value="/{id}")
+	public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
+		User user = userService.getOneById(id);
+	
+		if(user == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(user.get(),HttpStatus.OK);
+		return new ResponseEntity(user,HttpStatus.OK);
 	}
 	
-	@PostMapping("/user")
+	
+	
+	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public User createUser(@RequestBody User user) {
-		userRepository.save(user);
-		return user;
+		return userService.create(user);
 	}
 	
-	@PutMapping("/user/{id}")
-	  public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+	@PutMapping("/{id}")
+	  public User updateUser(@PathVariable("id") long id, @RequestBody User user) {
 	    Optional<User> userData = userRepository.findById(id);
-
-	    if (userData.isPresent()) {
-	      User _user = userData.get();
-	      _user.setUsername(user.getUsername());
-	      _user.setPassword(user.getPassword());
-	      _user.setRoles(user.getRoles());
-	      return new ResponseEntity<>(userRepository.save(_user), HttpStatus.OK);
-	    } else {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	      }
+	    	return userService.update(id, user);
 	    }
 	
 	
-	  @DeleteMapping("/users/{id}")
+	  @DeleteMapping("/{id}")
 	  public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
-	    try {
-	      userRepository.deleteById(id);
-	      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+	   
+	      Boolean success = userService.delete(id);
+	      if(success) {
+	    	  return new ResponseEntity<>(HttpStatus.OK);
+	      }
+	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    
 	  }
 	
 	
