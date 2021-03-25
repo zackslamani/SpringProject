@@ -50,7 +50,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quest.etna.config.JwtTokenUtil;
-import com.quest.etna.config.MyUserDetailsService;
+import com.quest.etna.config.JwtUserDetailsService;
 import com.quest.etna.model.AuthenticationRequest;
 import com.quest.etna.model.AuthenticationResponse;
 import com.quest.etna.model.JwtUserDetails;
@@ -59,7 +59,6 @@ import com.quest.etna.model.SignupRequest;
 
 @ComponentScan("com.quest.etna.config")
 @RestController
-@RequestMapping("/api/auth")
 class AuthenticationController {
 
 	@Autowired
@@ -69,7 +68,7 @@ class AuthenticationController {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@Autowired
-	private MyUserDetailsService userDetailsService;
+	private JwtUserDetailsService jwtUserDetailsService;
 	
 	@Autowired
 	UserRepository userRepository;
@@ -95,7 +94,7 @@ class AuthenticationController {
 		}
 
 
-		final JwtUserDetails userDetails = userDetailsService
+		final JwtUserDetails userDetails = jwtUserDetailsService
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
@@ -111,7 +110,7 @@ class AuthenticationController {
 	
 	
 	
-	@PostMapping("/signup")
+	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity

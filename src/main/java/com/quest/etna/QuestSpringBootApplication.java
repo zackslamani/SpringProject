@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.quest.etna.config.JwtRequestFilter;
 import com.quest.etna.config.JwtTokenUtil;
-import com.quest.etna.config.MyUserDetailsService;
+import com.quest.etna.config.JwtUserDetailsService;
 import com.quest.etna.model.AuthenticationRequest;
 import com.quest.etna.model.AuthenticationResponse;
 
-@SpringBootApplication(scanBasePackages = { "com.quest.etna.controller",  "com.quest.etna.config", "com.quest.etna.model"} )
+@SpringBootApplication(scanBasePackages = { "com.quest.etna.controller",  "com.quest.etna.config", "com.quest.etna.model", "com.quest.etna.service"} )
 @EnableJpaRepositories("com.quest.etna.repository")
 public class QuestSpringBootApplication {
 

@@ -15,7 +15,7 @@ import com.quest.etna.repository.UserRepository;
 @ComponentScan(basePackages={"com.quest.etna.repository"})
 @Service
 //@EnableJpaRepositories("com.quest.etna.repository")
-public class MyUserDetailsService implements UserDetailsService {
+public class JwtUserDetailsService implements UserDetailsService {
 	@Autowired
 	UserRepository userRepository;
 	

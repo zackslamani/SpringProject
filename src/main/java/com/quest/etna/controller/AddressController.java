@@ -20,39 +20,45 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.quest.etna.model.Address;
 import com.quest.etna.repository.AddressRepository;
+import com.quest.etna.service.AddressService;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/ad")
+@RequestMapping("/addresses")
 public class AddressController {
 
 	@Autowired
 	private AddressRepository addressRepository;
 	
-	@GetMapping(value="/addresses")
+	@Autowired
+	private AddressService addressService;
+	
+	
+	@GetMapping(value="")
+	@ResponseStatus(HttpStatus.OK)
 	public List <Address> getListAddress(){
 		 
-		List<Address> addresses = new ArrayList<Address>();
-		      
-		addressRepository.findAll().forEach(addresses::add);
+		List<Address> addresses = addressService.getList();
 
 		 return addresses;
 	}
 	
-	@GetMapping(value="/address/{id}")
+	@GetMapping(value="/{id}")
 	public ResponseEntity<Address> getAddressById(@PathVariable("id") Long id){
-	Optional <Address> address = addressRepository.findById(id);
+		Address address = addressService.getOneById(id);
 	
-		if(address.isEmpty()) {
+		if(address == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity(address.get(),HttpStatus.OK);
+		return new ResponseEntity(address,HttpStatus.OK);
 	}
 	
-	@PostMapping("/address")
+	
+	
+	
+	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Address createAddress(@RequestBody Address address) {
-		addressRepository.save(address);
-		return address;
+		return addressService.create(address);
 	}
 	
 	@GetMapping(value="/address/user/{id}")
@@ -63,31 +69,24 @@ public class AddressController {
 	}
 
 	
-	@PutMapping("/address/{id}")
-	  public ResponseEntity<Address> updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
+	@PutMapping("/user/{id}")
+	  public Address updateAddress(@PathVariable("id") long id, @RequestBody Address address) {
 	    Optional<Address> addressData = addressRepository.findById(id);
-
-	    if (addressData.isPresent()) {
-	      Address _address = addressData.get();
-	      _address.setCity(address.getCity());
-	      _address.setStreet(address.getStreet());
-	      _address.setPostalCode(address.getPostalCode());
-	      _address.setCountry(address.getCountry());
-	      return new ResponseEntity<>(addressRepository.save(_address), HttpStatus.OK);
-	    } else {
-	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-	      }
+	    	return addressService.update(id, address);
 	    }
 	
 	
-	  @DeleteMapping("/addresses/{id}")
+	  @DeleteMapping("/{id}")
 	  public ResponseEntity<HttpStatus> deleteAddress(@PathVariable("id") long id) {
-	    try {
-	      addressRepository.deleteById(id);
-	      return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	    } catch (Exception e) {
-	      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-	    }
+	   
+	      Boolean success = addressService.delete(id);
+	      if(success) {
+	    	  return new ResponseEntity<>(HttpStatus.OK);
+	      }
+	      
+	    
+	      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    
 	  }
 	
 	

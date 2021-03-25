@@ -64,8 +64,7 @@ public class Address {
 		
 	}
 	
-	public Address(Long id, String street, String postalCode, String city, String country, User user, Date creationDate, Date updatedDate) {
-		this.id = id;
+	public Address(String street, String postalCode, String city, String country, User user, Date creationDate, Date updatedDate) {
 		this.street = street;
 		this.postalCode = postalCode;
 		this.city = city;
@@ -73,6 +72,13 @@ public class Address {
 		this.user = user;
 		this.creationDate = creationDate;
 		this.updatedDate = updatedDate;
+	}
+	
+	public Address(String street, String postalCode, String city, String country) {
+		this.street = street;
+		this.postalCode = postalCode;
+		this.city = city;
+		this.country = country;
 	}
 
 	public Long getId() {

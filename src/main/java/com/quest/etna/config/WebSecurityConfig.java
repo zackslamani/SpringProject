@@ -49,7 +49,7 @@ class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-				.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/api/test/**").permitAll().antMatchers("/api/def/**").permitAll().antMatchers("/api/ad/**").permitAll().antMatchers("api/us/**").permitAll()
+				.authorizeRequests().antMatchers("/authenticate").permitAll().antMatchers("/register").permitAll().antMatchers("/api/test/**").permitAll().antMatchers("/api/def/**").permitAll().antMatchers("/addresses/**").permitAll().antMatchers("api/us/**").permitAll()
 						.anyRequest().authenticated().and().
 						exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
