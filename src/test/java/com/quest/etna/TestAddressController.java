@@ -4,9 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -25,10 +29,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
@@ -50,7 +57,21 @@ public class TestAddressController {
 	@Autowired
 	protected UserService userService;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	
 	public static final MediaType APPLICATION_JSON_UTF8 = new MediaType(MediaType.APPLICATION_JSON.getType(), MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
+	
+	User user = new User("foo", "foo");
+	
+	String jsonUser = asJsonString(user);
+	
+	private static String Bearer = "Bearer ";
+	
+	private static String accessToken ;
+	
+	private static List<String> roles;
 	
 	/*@Test
 	protected void getListAddress() throws Exception {
@@ -60,27 +81,78 @@ public class TestAddressController {
 		.andDo(print())
 		.andExpect(status().isUnauthorized());
 	}*/
+	public static String asJsonString(final Object obj) {
+	    try {
+	        return new ObjectMapper().writeValueAsString(obj);
+	    } catch (Exception e) {
+	        throw new RuntimeException(e);
+	    }
+	} 
 	
 	@Test
 	protected void testAuthenticate() throws Exception {
 		
+		//System.out.println(json);
+		ResultActions resultActionsRegister = this.mockMvc
+		.perform( MockMvcRequestBuilders
+			      .post("/register")
+			      .content(jsonUser)
+			      .contentType(MediaType.APPLICATION_JSON)
+			      .accept(MediaType.APPLICATION_JSON));
+			      //.andExpect(status().isCreated())
+		
+		MvcResult resultRegister = resultActionsRegister.andReturn();
+		int statutRegister = resultRegister.getResponse().getStatus();
+		//System.out.println(statutRegister);
+		
+		if(statutRegister == 201) {
+			resultActionsRegister.andExpect(status().isCreated());
+		}else if(statutRegister == 409) {
+			resultActionsRegister.andExpect(status().isConflict());
+		}
 		
 		
-	    User user = new User();
-	    user.setUsername("us");
-	    user.setPassword("pass");
-	    ObjectMapper mapper = new ObjectMapper();
-	    mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-	    ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-	    String requestJson=ow.writeValueAsString(user);
-
-	    mockMvc.perform(post("/register").contentType(APPLICATION_JSON_UTF8)
-	        .content(requestJson))
-		.andDo(print())
-		.andExpect(status().isCreated());
-	      
-
+		//String jsonAuthenticate = asJsonString(new User("JunittdGest", "1223434"));
+		//System.out.println(json);
+		ResultActions resultActionsAuthenticate = this.mockMvc
+		.perform( MockMvcRequestBuilders
+			      .post("/authenticate")
+			      .content(jsonUser)
+			      .contentType(MediaType.APPLICATION_JSON)
+			      .accept(MediaType.APPLICATION_JSON))
+			      .andExpect(status().isOk());
+				
+		
+		MvcResult resultAuthenticate = resultActionsAuthenticate.andReturn();
+		int statutAuthenticate = resultAuthenticate.getResponse().getStatus();
+		MockHttpServletResponse contentAuthenticate =  resultAuthenticate.getResponse();
+		//String [] words = contentAuthenticate.split(",");
+		//accessToken = StringUtils.substring(words[3], 15, words[3].length() - 1);
+		//String accessToken = words[3].substring(15,-1);
+		//System.out.println(words[3]);
+		
+		//String roleString = StringUtils.substring(words[2], 9, words[2].length() - 1);
+		//System.out.println("depuis testAuthenticate" + accessToken);
+		//System.out.println(statutAuthenticate);
+		//System.out.println(roleString);
+		//System.out.println(accessToken);
+		//System.out.println(contentAuthenticate);
+		String str = contentAuthenticate.getContentAsString();
+	
+		
+		//Response response = objectMapper.readValue(str, Response.class);
+		
+		//System.out.println(response.getUsername());
+		
+		
 	}
+	
+	@Test
+	protected void testUser() throws Exception {
+		
+	}
+	
+	
 	
 	/*
 	@Test

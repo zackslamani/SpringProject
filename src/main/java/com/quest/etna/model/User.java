@@ -42,7 +42,7 @@ public class User {
 	@Size(max = 20)
 	private String username;
 
-	@JsonIgnore
+	//@JsonIgnore
 	@NotBlank
 	@Size(max = 120)
 	private String password;

@@ -2,6 +2,7 @@ package com.quest.etna.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import com.quest.etna.config.JwtTokenUtil;
 import com.quest.etna.model.AuthenticationRequest;
@@ -56,7 +58,7 @@ import com.quest.etna.model.AuthenticationResponse;
 import com.quest.etna.model.JwtUserDetails;
 import com.quest.etna.model.SignupRequest;
 
-
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 @ComponentScan("com.quest.etna.config")
 @RestController
 class AuthenticationController {
@@ -109,13 +111,11 @@ class AuthenticationController {
 	}
 	
 	
-	
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
+			
+			return new ResponseEntity<>("Error: Username is already taken!", HttpStatus.CONFLICT);
 		}
 
 		// Create new user's account
@@ -154,7 +154,8 @@ class AuthenticationController {
 		user.setRoles(roles);
 		userRepository.save(user);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		//return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return new ResponseEntity<>("User registered successfully!", HttpStatus.CREATED);
 	}
 
 }

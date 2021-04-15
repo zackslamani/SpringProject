@@ -30,8 +30,6 @@ public interface AddressRepository extends PagingAndSortingRepository<Address, L
 	        "left join users u " +
 	        "   on ua.user_id = u.id " +
 	        "where u.id = :id", nativeQuery = true)
-	public List<Address> findByUserId(Long id);
-	
-	
+		public List<Address> findByUserId(Long id);
 
 }

@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.quest.etna.model.Address;
 import com.quest.etna.repository.AddressRepository;
 import com.quest.etna.service.AddressService;
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
 @RestController
 @RequestMapping("/address")
 public class AddressController {

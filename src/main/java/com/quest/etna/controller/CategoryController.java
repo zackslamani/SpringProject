@@ -1,13 +1,11 @@
 package com.quest.etna.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,65 +17,61 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.quest.etna.model.Address;
-import com.quest.etna.model.User;
-import com.quest.etna.repository.UserRepository;
-import com.quest.etna.service.UserService;
+import com.quest.etna.model.Category;
+import com.quest.etna.repository.CategoryRepository;
+import com.quest.etna.service.CategoryService;
 
 @CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
 @RestController
-@RequestMapping("/user")
-public class UserController {
-
-
+@RequestMapping("/category")
+public class CategoryController {
 	@Autowired
-	private UserRepository userRepository;
+	private CategoryRepository categoryRepository;
 	
 	@Autowired
-	private UserService userService;
+	private CategoryService categoryService;
+	
 	
 	@GetMapping(value="")
 	@ResponseStatus(HttpStatus.OK)
-	public List <User> getListUser(){
+	public List <Category> getListCategory(){
 		 
-		List<User> users = userService.getList();
+		List<Category> categorys = categoryService.getList();
 
-		 return users;
+		 return categorys;
 	}
-	
-	
-	
 	
 	@GetMapping(value="/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
-		User user = userService.getOneById(id);
+	public ResponseEntity<Category> getCategoryById(@PathVariable("id") Long id){
+		Category category = categoryService.getOneById(id);
 	
-		if(user == null) {
+		if(category == null) {
 			return new ResponseEntity(HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<User>(user,HttpStatus.OK);
+		return new ResponseEntity(category,HttpStatus.OK);
 	}
+	
 	
 	
 	
 	@PostMapping("/")
 	@ResponseStatus(HttpStatus.CREATED)
-	public User createUser(@RequestBody User user) {
-		return userService.create(user);
+	public Category createCategory(@RequestBody Category category) {
+		return categoryService.create(category);
 	}
+
 	
 	@PutMapping("/{id}")
-	  public User updateUser(@PathVariable("id") long id, @RequestBody User user) {
-	    Optional<User> userData = userRepository.findById(id);
-	    	return userService.update(id, user);
+	  public Category updateCategory(@PathVariable("id") long id, @RequestBody Category category) {
+	    Optional<Category> categoryData = categoryRepository.findById(id);
+	    	return categoryService.update(id, category);
 	    }
 	
 	
 	  @DeleteMapping("/{id}")
-	  @PreAuthorize("hasRole('ADMIN')")
-	  public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
+	  public ResponseEntity<HttpStatus> deleteCategory(@PathVariable("id") long id) {
 	   
-	      Boolean success = userService.delete(id);
+	      Boolean success = categoryService.delete(id);
 	      if(success) {
 	    	  return new ResponseEntity<>(HttpStatus.OK);
 	      }
