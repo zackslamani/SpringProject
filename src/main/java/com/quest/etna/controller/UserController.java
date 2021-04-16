@@ -24,7 +24,7 @@ import com.quest.etna.model.User;
 import com.quest.etna.repository.UserRepository;
 import com.quest.etna.service.UserService;
 
-@CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 @RestController
 @RequestMapping("/user")
 public class UserController {

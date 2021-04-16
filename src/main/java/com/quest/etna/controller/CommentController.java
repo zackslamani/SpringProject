@@ -21,7 +21,7 @@ import com.quest.etna.model.Comment;
 import com.quest.etna.repository.CommentRepository;
 import com.quest.etna.service.CommentService;
 
-@CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 @RestController
 @RequestMapping("/comment")
 public class CommentController {

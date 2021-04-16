@@ -21,7 +21,7 @@ import com.quest.etna.model.Article;
 import com.quest.etna.repository.ArticleRepository;
 import com.quest.etna.service.ArticleService;
 
-@CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
@@ -55,7 +55,7 @@ public class ArticleController {
 	
 	
 	
-	@PostMapping("/")
+	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
 	public Article createArticle(@RequestBody Article article) {
 		return articleService.create(article);

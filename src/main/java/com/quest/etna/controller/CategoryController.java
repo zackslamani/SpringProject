@@ -21,7 +21,7 @@ import com.quest.etna.model.Category;
 import com.quest.etna.repository.CategoryRepository;
 import com.quest.etna.service.CategoryService;
 
-@CrossOrigin(origins = "http://localhost:8090", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:8081", maxAge = 3600)
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
